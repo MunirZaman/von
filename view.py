@@ -4,6 +4,8 @@ import rich.traceback as traceback
 from rich import print # overwrite print function
 from rich.panel import Panel
 from rich.table import Table
+import rich.box
+from torch import t
 
 from . import model
 from . import rc
@@ -156,12 +158,12 @@ def getSearchItem(entry: model.IndexEntry):
         diff_string = "⚔"*stats.getLevelFromHardness(diff)
     else:
         diff_string = "X"*stats.getLevelFromHardness(diff)
-        
+
     return [label_string, tags_string, diff_string]
     
 
 def printSearch(*args, **kwargs):
-    table = Table()
+    table = Table(box=rich.box.ROUNDED)
     table.add_column("Label", justify="center")
     table.add_column("Tags", justify="left")
     table.add_column("Difficulty", justify="center")
@@ -171,4 +173,29 @@ def printSearch(*args, **kwargs):
         table.add_row(*getSearchItem(res))
 
     out(table)
+
+def printStatsTags(tags: list):
+    results = [len(model.runSearch(tags=[tag])) for tag in tags]
+
+    table = Table(box=rich.box.ROUNDED)
+    table.add_column("Tags", justify="center")
+    table.add_column("Results", justify="center")
+
+    for i in range(len(tags)):
+        table.add_row(f"[cyan]{tags[i]}[/]", f"[green]{results[i]}[/]")
+    
+    out(table)
+
+def printStatsTerms(terms: list):
+    results = [len(model.runSearch(terms=[term])) for term in terms]
+
+    table = Table(box=rich.box.ROUNDED)
+    table.add_column("Terms", justify="center")
+    table.add_column("Results", justify="center")
+
+    for i in range(len(terms)):
+        table.add_row(f"[cyan]{terms[i]}[/]", f"[green]{results[i]}[/]")
+    
+    out(table)
+
 
