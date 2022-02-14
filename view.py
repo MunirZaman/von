@@ -14,27 +14,30 @@ traceback.install()
 console = rich.console.Console()
 error_console = rich.console.Console(stderr=True)
 
-def error(msg):
-    if rc.TERM_EMOJI:
-        error_console.print("❌ "+ msg, style="bold red")
-    else:
-        error_console.print("Error: "+ msg, style="bold red")
+def log(msg, *args, **kwargs):
+    console.log(msg, *args, **kwargs)
 
-def warn(msg):
+def error(msg, *args, **kwargs):
     if rc.TERM_EMOJI:
-        error_console.print("⚠ "+ msg, style="bold yellow")
+        error_console.print("❌ "+ msg, style="bold red", *args, **kwargs)
     else:
-        error_console.print("Warning: "+ msg, style="bold yellow")
+        error_console.print("Error: "+ msg, style="bold red", *args, **kwargs)
 
-
-def success(msg):
+def warn(msg, *args, **kwargs):
     if rc.TERM_EMOJI:
-        out("[bold green]✅ "+ msg)
+        error_console.print("⚠ "+ msg, style="bold yellow", *args, **kwargs)
     else:
-        out(msg, style="green")
+        error_console.print("Warning: "+ msg, style="bold yellow", *args, **kwargs)
+
+def success(msg, *args, **kwargs):
+    if rc.TERM_EMOJI:
+        out("[bold green]✅ "+ msg, *args, **kwargs)
+    else:
+        out(msg, style="green", *args, **kwargs)
 
 def out(message, *args, **kwargs):
 	console.print(message, *args, **kwargs)
+
 
 def getEntryString(entry: model.IndexEntry):
     s = ""
