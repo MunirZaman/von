@@ -1,4 +1,5 @@
 import os
+import collections
 import yaml
 import pickle
 from .rc import SEPERATOR, VON_BASE_PATH, VON_INDEX_PATH
@@ -14,7 +15,7 @@ def vonOpen(path, *args, **kwargs):
     return open(completePath(path), *args, **kwargs)
 
 
-class pickleObj:
+class pickleObj(collections.abc.MutableMapping):
     """Pickle Obj for storing stuff in files """
     def _initial(self):
         return None
@@ -191,4 +192,24 @@ def rebuildIndex():
             pass
         d[p.label] = p.entry
     setEntireIndex(d)
+
+def runSearch(
+    terms=[], tags=[], sources=[], path='', alph_sort=False
+):
+
+    def _matches(entry):
+        return (
+            all([entry.hasTag(_) for _ in tags]) and all([entry.hasTerm(_) for _ in terms]) and
+            all([entry.hasSource(_) for _ in sources]) and entry.path.startswith(path)
+        )
+        
+    with VonIndex() as index:
+        result = [entry for entry in index.values() if _matches(entry)]
+
+    if alph_sort:
+        result.sort(key=lambda e: e.label)
+    else:
+        result.sort(key=lambda e: e.hardness)
+
+    return result
 

@@ -20,17 +20,26 @@ def error(msg):
 def warn(msg):
     error_console.print("Warning: "+ msg, style="bold yellow")
 
+def success(msg):
+    if rc.TERM_EMOJI:
+        out("[bold green]✔ "+ msg)
+    else:
+        out(msg, style="green")
+
 def out(message, *args, **kwargs):
 	console.print(message, *args, **kwargs)
 
 def getEntryString(entry: model.IndexEntry):
     s = ""
     label = entry.label
-    label_string = f"[bold red]{label}[/bold red]"
+    label_string = f"[bold red]{label}[/]"
 
     if hasattr(entry, 'tags') and type(entry.tags) == list:
-        if ('fav' in entry.tags or 'favourite' in entry.tags) and rc.TERM_EMOJI:
-            label_string += " :two_hearts:"
+        if ('fav' in entry.tags or 'favourite' in entry.tags):
+            if rc.TERM_EMOJI:
+                label_string = f"[red]{label}[/]" + " :two_hearts:"
+            else:
+                label_string = f"[red]{label} <3[/]"
 
     if hasattr(entry, 'hardness') and type(entry.hardness) == int and entry.hardness > 0:
         hard = entry.hardness
@@ -46,6 +55,17 @@ def getEntryString(entry: model.IndexEntry):
 
         if rc.TERM_EMOJI:
             label_string += " " + ":crossed_swords:"*level
+        else:
+            difficulty = ""
+            if level == 1:
+                difficulty = "[green]X[/]"
+            elif level == 2:
+                difficulty = "[yellow]XX[/]"
+            elif level == 3:
+                difficulty = "[blue]XXX[/]"
+            elif level == 4:
+                difficulty = "[red]XXXX[/]"
+            label_string += " " + difficulty
 
     s += label_string + "\n"
     #if entry.isFav:
@@ -56,7 +76,7 @@ def getEntryString(entry: model.IndexEntry):
         s += tags_string
 
     if hasattr(entry, 'desc'):
-        desc = entry.desc[:70] + " ..."
+        desc = entry.desc
         desc_string = f"\n[bold cyan]description:[/bold cyan]\n\n[cyan]" \
                       + "\n".join(["\t" + line for line in desc.splitlines()]) + "[/cyan]"
         s += desc_string
