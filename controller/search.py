@@ -50,6 +50,5 @@ def main(self, opts):
     path = opts.path
     print(path)
 
-    results = model.runSearch(tags=tags, terms=terms, sources=sources, path=path)
-    for entry in results:
-        view.printEntry(entry)
+    view.printSearch(tags=tags, terms=terms, sources=sources, path=path)
+

@@ -63,9 +63,16 @@ class pickleDict(pickleObj):
     def _initial(self):
         return {}
 
+class pickleList(pickleObj):
+    def _initial(self):
+        return []
+
 
 def VonIndex(mode='rb'):
     return pickleDict(VON_INDEX_PATH, mode)
+
+#def VonToday(mode='rb'):
+#    return pickleList(VON_TODAY_PATH, mode)
 
 
 class Problem:
@@ -186,10 +193,7 @@ def rebuildIndex():
     d = {}
     for p in getAllProblems():
         if p.source in d:
-            #fake_source = f"DUPLICATE {random.randrange(10**6, 10**7)}"
-            #print(p.source + " is being repeated, replacing with " + fake_source)
-            #p.source = fake_source
-            pass
+            pass # do smth
         d[p.label] = p.entry
     setEntireIndex(d)
 
