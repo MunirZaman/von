@@ -9,7 +9,8 @@ from . import view
 from .controller import (
     index,
     show,
-    search
+    search,
+    tex
 )
 
 WELCOME_MESSAGE = style("Welcome to VON!\n", fg="red", bold=True, underline=True)
@@ -28,4 +29,5 @@ class VonTerm(cmd2.Cmd):
     do_index = index.main
     do_show = show.main
     do_search = search.main
+    do_tex = tex.main
 

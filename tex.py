@@ -5,6 +5,7 @@ import pathlib
 from . import model
 
 LATEXMK = ['latexmk', '-pdflatex']
+LATEXMK_CLEAN = ['latexmk', '-c']
 
 TEX = \
 """\\documentclass[11pt,numbers=noenddot,svgnames,dvipsnames]{scrartcl}
@@ -12,9 +13,9 @@ TEX = \
 \\usepackage{munir}
 
 \\begin{document}
-\\begin{problem}
+\\begin{problem*}
 @problem
-\\end{problem}
+\\end{problem*}
 \\begin{sol}
 @solution
 \\end{sol}
@@ -63,3 +64,10 @@ def makeTeX(obj):
     except FileExistsError:
         with open(fn, 'w') as f:
             f.write(src)
+
+    return fn
+
+def cleanTeX():
+    subprocess.call([*LATEXMK_CLEAN])
+
+    

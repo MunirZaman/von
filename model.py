@@ -157,7 +157,7 @@ class IndexEntry:
         blob = self.label
         if not self.source is None:
             blob += " " + self.source
-        if not self.desc is None:
+        if hasattr(self, 'desc') and not self.desc is None:
             blob += " " + self.desc
 
         return (term.lower() in blob.lower() or self.hasTag(term))

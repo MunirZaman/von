@@ -15,14 +15,21 @@ console = rich.console.Console()
 error_console = rich.console.Console(stderr=True)
 
 def error(msg):
-    error_console.print("Error: "+ msg, style="bold red")
+    if rc.TERM_EMOJI:
+        error_console.print(":cross_mark: "+ msg, style="bold red")
+    else:
+        error_console.print("Error: "+ msg, style="bold red")
 
 def warn(msg):
-    error_console.print("Warning: "+ msg, style="bold yellow")
+    if rc.TERM_EMOJI:
+        error_console.print(":warning: "+ msg, style="bold yellow")
+    else:
+        error_console.print("Warning: "+ msg, style="bold yellow")
+
 
 def success(msg):
     if rc.TERM_EMOJI:
-        out("[bold green]✔ "+ msg)
+        out("[bold green]:check_mark_button: "+ msg)
     else:
         out(msg, style="green")
 
@@ -37,9 +44,9 @@ def getEntryString(entry: model.IndexEntry):
     if hasattr(entry, 'tags') and type(entry.tags) == list:
         if ('fav' in entry.tags or 'favourite' in entry.tags):
             if rc.TERM_EMOJI:
-                label_string = f"[red]{label}[/]" + " :two_hearts:"
+                label_string = f"[bold magenta]{label}[/]" + " :two_hearts:"
             else:
-                label_string = f"[red]{label} <3[/]"
+                label_string = f"[bold magenta]{label} <3[/]"
 
     if hasattr(entry, 'hardness') and type(entry.hardness) == int and entry.hardness > 0:
         hard = entry.hardness
@@ -68,8 +75,7 @@ def getEntryString(entry: model.IndexEntry):
             label_string += " " + difficulty
 
     s += label_string + "\n"
-    #if entry.isFav:
-    #    label_string += " :two_hearts:"
+
     if hasattr(entry, 'tags') and type(entry.tags) == list and not entry.tags == []:
         tags = entry.tags
         tags_string = f"[bold yellow]tags:[/bold yellow] " + f"[yellow]{str(tags)[1:-1]}[/yellow]"
