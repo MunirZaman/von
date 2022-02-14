@@ -16,20 +16,20 @@ error_console = rich.console.Console(stderr=True)
 
 def error(msg):
     if rc.TERM_EMOJI:
-        error_console.print(":cross_mark: "+ msg, style="bold red")
+        error_console.print("❌ "+ msg, style="bold red")
     else:
         error_console.print("Error: "+ msg, style="bold red")
 
 def warn(msg):
     if rc.TERM_EMOJI:
-        error_console.print(":warning: "+ msg, style="bold yellow")
+        error_console.print("⚠ "+ msg, style="bold yellow")
     else:
         error_console.print("Warning: "+ msg, style="bold yellow")
 
 
 def success(msg):
     if rc.TERM_EMOJI:
-        out("[bold green]:check_mark_button: "+ msg)
+        out("[bold green]✅ "+ msg)
     else:
         out(msg, style="green")
 
@@ -44,7 +44,7 @@ def getEntryString(entry: model.IndexEntry):
     if hasattr(entry, 'tags') and type(entry.tags) == list:
         if ('fav' in entry.tags or 'favourite' in entry.tags):
             if rc.TERM_EMOJI:
-                label_string = f"[bold magenta]{label}[/]" + " :two_hearts:"
+                label_string = f"[bold magenta]{label}[/]" + " 💖"
             else:
                 label_string = f"[bold magenta]{label} <3[/]"
 
@@ -61,7 +61,7 @@ def getEntryString(entry: model.IndexEntry):
             level = 1
 
         if rc.TERM_EMOJI:
-            label_string += " " + ":crossed_swords:"*level
+            label_string += " " + "⚔"*level
         else:
             difficulty = ""
             if level == 1:
