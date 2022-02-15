@@ -48,6 +48,16 @@ search.add_argument(
     action="store_true"
 )
 
+search.add_argument(
+    '-d',
+    '--diff',
+    nargs="+",
+    type=int,
+    dest="diff",
+    default=[],
+	help="problem difficulty"
+)
+
 @with_argparser(search)
 def main(self, opts):
     tags = opts.tags
@@ -55,10 +65,14 @@ def main(self, opts):
     sources = opts.sources
     path = opts.path
     show_all = opts.all
+    diff = opts.diff
     print(path)
 
     if not show_all:
-        view.printSearch(tags=tags, terms=terms, sources=sources, path=path)
+        if diff == []:
+            view.printSearch(tags=tags, terms=terms, sources=sources, path=path)
+        else:
+            view.printSearch(tags=tags, terms=terms, sources=sources, path=path, difficulty=diff)
     else:
         view.printAllEntries()
 

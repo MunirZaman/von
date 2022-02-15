@@ -4,6 +4,7 @@ from statistics import mode
 import yaml
 import pickle
 from .rc import SEPERATOR, VON_BASE_PATH, VON_INDEX_PATH
+from . import rc
 
 # Enter&Exit Methods: https://stackoverflow.com/questions/1984325/explaining-pythons-enter-and-exit
 
@@ -195,6 +196,16 @@ class IndexEntry:
 
         return (term.lower() in blob.lower() or self.hasTag(term))
 
+    def checkDifficulty(self, diff):
+        if type(diff) == list and len(diff) == 2:
+            return diff[0] <= self.hardness <= diff[1]
+        elif type(diff) == list and len(diff) == 1:
+            return self.hardness <= diff[0]
+        elif type(diff) == int:
+            return self.hardness <= diff
+        else:
+            return False
+
     @property
     def full(self):
         return makeProblemFromPath(self.path)
@@ -223,14 +234,17 @@ def rebuildIndex():
         d[p.label] = p.entry
     setEntireIndex(d)
 
+
+MAX_DIFFICULTY = max(rc.PROBLEM_HARDNESS.values())
+
 def runSearch(
-    terms=[], tags=[], sources=[], path='', alph_sort=False
+    terms=[], tags=[], sources=[], difficulty=MAX_DIFFICULTY, path='', alph_sort=False
 ):
 
     def _matches(entry):
         return (
             all([entry.hasTag(_) for _ in tags]) and all([entry.hasTerm(_) for _ in terms]) and
-            all([entry.hasSource(_) for _ in sources]) and entry.path.startswith(path)
+            all([entry.hasSource(_) for _ in sources]) and entry.checkDifficulty(difficulty) and entry.path.startswith(path)
         )
         
     with VonIndex() as index:
