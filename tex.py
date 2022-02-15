@@ -1,4 +1,5 @@
 import os
+from re import sub
 import subprocess
 import pathlib
 
@@ -107,10 +108,22 @@ def makeTeXAll(folder, compile=True):
 
         if compile:
             os.chdir(new_parent)
-            os.system(' '.join([*LATEXMK, fname]))
-            os.system(' '.join(LATEXMK_CLEAN))
-            os.chdir(cwd)
-            view.log(f"Successfully compiled {new_path}")
+
+            try:
+                subprocess.check_output([*LATEXMK, fname], stderr=subprocess.PIPE)
+                
+                subprocess.check_output(LATEXMK_CLEAN, stderr=subprocess.PIPE)
+                os.chdir(cwd)
+                
+                view.log(f"[bold green]Successfully compiled - {new_path}[/]")
+
+            except subprocess.CalledProcessError:
+                view.error(f"Something went wrong while compiling - {new_path}")
+                
+                subprocess.check_output(LATEXMK_CLEAN, stderr=subprocess.PIPE)
+                os.chdir(cwd)
+                
+                continue
 
     os.chdir(cwd)
 
