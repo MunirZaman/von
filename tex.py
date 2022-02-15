@@ -25,8 +25,8 @@ TEX = \
 """
 
 
-def compileTeX(path, opts = [], stdout = subprocess.STDOUT):
-    subrun = subprocess.run([*LATEXMK, *opts, path], stdout = stdout)
+def compileTeX(path, opts = []):
+    subrun = subprocess.run([*LATEXMK, *opts, path])
     parent = pathlib.PurePath(path).parent
     filename = pathlib.PurePath(path).name.replace('.tex', '.pdf')
     #os.system(filename)
@@ -73,7 +73,7 @@ def makeTeX(obj):
     return fn
 
 def cleanTeX():
-    subprocess.call([*LATEXMK_CLEAN])
+    subprocess.check_output([*LATEXMK_CLEAN])
 
     
 def makeTeXAll(folder, compile=True):
