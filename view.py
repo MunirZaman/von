@@ -5,7 +5,6 @@ from rich import print # overwrite print function
 from rich.panel import Panel
 from rich.table import Table
 import rich.box
-from torch import t
 
 from . import model
 from . import rc
@@ -163,8 +162,8 @@ def getSearchItem(entry: model.IndexEntry):
     
 
 def printSearch(*args, **kwargs):
-    table = Table(box=rich.box.ROUNDED)
-    table.add_column("Label", justify="center")
+    table = Table(box=rc.RICH_BOX)
+    table.add_column("Label", justify="left")
     table.add_column("Tags", justify="left")
     table.add_column("Difficulty", justify="center")
 
@@ -173,6 +172,18 @@ def printSearch(*args, **kwargs):
         table.add_row(*getSearchItem(res))
 
     out(table)
+
+def printAllEntries():
+    table = Table(box=rc.RICH_BOX)
+    table.add_column("Label", justify="left")
+    table.add_column("Tags", justify="left")
+    table.add_column("Difficulty", justify="center")
+
+    results = model.VonIndex().values()
+    for res in results:
+        table.add_row(*getSearchItem(res))
+
+    out(table)  
 
 def printStatsTags(tags: list):
     results = [len(model.runSearch(tags=[tag])) for tag in tags]

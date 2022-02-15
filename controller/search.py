@@ -5,7 +5,6 @@ from .. import view, model
 search = Cmd2ArgumentParser(prog="search", usage="search the index")
 
 
-
 search.add_argument(
     '-t',
 	'--tags',
@@ -42,13 +41,24 @@ search.add_argument(
 	help="Path"
 )
 
+search.add_argument(
+    '-a',
+    dest="all",
+	help="shows all entries",
+    action="store_true"
+)
+
 @with_argparser(search)
 def main(self, opts):
     tags = opts.tags
     terms = opts.terms
     sources = opts.sources
     path = opts.path
+    show_all = opts.all
     print(path)
 
-    view.printSearch(tags=tags, terms=terms, sources=sources, path=path)
+    if not show_all:
+        view.printSearch(tags=tags, terms=terms, sources=sources, path=path)
+    else:
+        view.printAllEntries()
 

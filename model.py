@@ -5,7 +5,7 @@ import yaml
 import pickle
 from .rc import SEPERATOR, VON_BASE_PATH, VON_INDEX_PATH
 
-# https://stackoverflow.com/questions/1984325/explaining-pythons-enter-and-exit
+# Enter&Exit Methods: https://stackoverflow.com/questions/1984325/explaining-pythons-enter-and-exit
 
 def shortenPath(path):
     return os.path.relpath(path, VON_BASE_PATH)
@@ -38,7 +38,7 @@ class pickleObj:
     def __enter__(self):
         return self
     
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         # rewrite everything if mode is 'wb'
         if self.mode == 'wb':
             with vonOpen(self.path, 'wb') as f:
