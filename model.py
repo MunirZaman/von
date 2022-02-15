@@ -1,9 +1,11 @@
 import os
 import collections
+from statistics import mode
 import yaml
 import pickle
 from .rc import SEPERATOR, VON_BASE_PATH, VON_INDEX_PATH
 
+# https://stackoverflow.com/questions/1984325/explaining-pythons-enter-and-exit
 
 def shortenPath(path):
     return os.path.relpath(path, VON_BASE_PATH)
@@ -15,15 +17,19 @@ def vonOpen(path, *args, **kwargs):
     return open(completePath(path), *args, **kwargs)
 
 
-class pickleObj(collections.abc.MutableMapping):
+class pickleObj:
     """Pickle Obj for storing stuff in files """
+
     def _initial(self):
         return None
 
     def __init__(self, path, mode='rb'):
         if not os.path.isfile(path) or os.path.getsize(path) == 0:
+            # if the specified path is not a file or 
+            # if the file is empty then set store to _initial.
             self.store = self._initial()
         else:
+            # else set store = file data
             with vonOpen(path, 'rb') as f:
                 self.store = pickle.load(f)
         self.path = path
@@ -31,11 +37,20 @@ class pickleObj(collections.abc.MutableMapping):
 
     def __enter__(self):
         return self
-
-    def __exit__(self, type, value, traceback):
+    
+    def __exit__(self):
+        # rewrite everything if mode is 'wb'
         if self.mode == 'wb':
             with vonOpen(self.path, 'wb') as f:
                 pickle.dump(self.store, f)
+
+    def set(self, store):
+        self.store = store
+
+
+class pickleDict(pickleObj, collections.abc.MutableMapping):
+    def _initial(self):
+        return {}
 
     def __getitem__(self, key):
         try:
@@ -55,17 +70,28 @@ class pickleObj(collections.abc.MutableMapping):
     def __len__(self):
         return len(self.store)
 
-    def set(self, store):
-        self.store = store
 
-
-class pickleDict(pickleObj):
-    def _initial(self):
-        return {}
-
-class pickleList(pickleObj):
+class pickleList(pickleObj, collections.abc.MutableSequence):
     def _initial(self):
         return []
+
+    def __getitem__(self, key):
+        try:
+            return self.store[key]
+        except IndexError:
+            raise IndexError(f"{key} not a valid key")
+
+    def __setitem__(self, key, value):
+        self.store[key] = value
+
+    def __delitem__(self, key):
+        del self.store[key]
+
+    def __iter__(self):
+        return iter(self.store)
+
+    def __len__(self):
+        return len(self.store)
 
 
 def VonIndex(mode='rb'):
