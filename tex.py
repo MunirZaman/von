@@ -10,7 +10,7 @@ LATEXMK_CLEAN = ['latexmk', '-c']
 TEX = \
 """\\documentclass[11pt,numbers=noenddot,svgnames,dvipsnames]{scrartcl}
 \\usepackage[top=1in, left=1in, right=1in, bottom=1in]{geometry}
-\\usepackage{munir}
+\\usepackage[asy]{munir}
 
 \\begin{document}
 \\begin{problem*}

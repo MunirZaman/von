@@ -4,6 +4,7 @@ from cmd2 import style
 import os
 import glob
 import difflib
+from thefuzz import process as fuzzprocess
 
 from . import rc
 from . import model
@@ -30,7 +31,12 @@ def _complete_path(path):
 
 def _complete_label(label):
     labels = list(model.VonIndex())
-    return difflib.get_close_matches(label, labels, len(labels), 0)
+    if label.strip() != "":
+        best = fuzzprocess.extractBests(label, labels, score_cutoff=60)
+        matches = [match[0] for match in best]
+    else:
+        matches = []
+    return matches
 
 def completeVonPath(self, text, line, start_idx, end_idx):
     return _complete_path(text)
