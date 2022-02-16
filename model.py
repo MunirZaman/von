@@ -98,9 +98,6 @@ class pickleList(pickleObj, collections.abc.MutableSequence):
 def VonIndex(mode='rb'):
     return pickleDict(VON_INDEX_PATH, mode)
 
-#def VonToday(mode='rb'):
-#    return pickleList(VON_TODAY_PATH, mode)
-
 
 class Problem:
     def __init__(self, path, **kwargs):
@@ -216,10 +213,11 @@ def addEntryToIndex(entry):
         index[entry.label] = entry
 
 def addProblemToIndex(problem):
-    with VonIndex('wb') as index:
-        p = problem
-        index[p.label] = p.entry
-        #return index[p.source]
+    if problem is not None:
+        with VonIndex('wb') as index:
+            p = problem
+            index[p.label] = p.entry
+            #return index[p.source]
 
 def setEntireIndex(d):
     with VonIndex('wb') as index:

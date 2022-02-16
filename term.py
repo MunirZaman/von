@@ -16,7 +16,8 @@ from .controller import (
     search,
     tex,
     add,
-    stats
+    stats,
+    snap
 )
 
 WELCOME_MESSAGE = style("Welcome to VON!\n", fg="red", bold=True, underline=True)
@@ -61,6 +62,7 @@ class VonTerm(cmd2.Cmd):
     do_tex = tex.main
     do_add = add.main
     do_stats = stats.main
+    do_snap = snap.main
 
     complete_show = completeVonLabel
     complete_tex = completeVonLabel

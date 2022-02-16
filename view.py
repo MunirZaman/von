@@ -38,6 +38,12 @@ def success(msg, *args, **kwargs):
     else:
         out(msg, style="green", *args, **kwargs)
 
+def link(link, text=None):
+    if text is None:
+        text = link
+    
+    return f"[link={link}]{text}[/link]"
+
 def out(message, *args, **kwargs):
 	console.print(message, *args, **kwargs)
 
@@ -78,12 +84,12 @@ def getEntryString(entry: model.IndexEntry):
 
     if hasattr(entry, 'tags') and type(entry.tags) == list and not entry.tags == []:
         tags = entry.tags
-        tags_string = f"[bold yellow]tags:[/bold yellow] " + f"[yellow]{str(tags)[1:-1]}[/yellow]"
+        tags_string = f"[bold yellow]tags:[/bold yellow] " + f"[yellow]{str(tags)[1:-1]}[/yellow]\n"
         s += tags_string
 
     if hasattr(entry, 'desc'):
         desc = entry.desc
-        desc_string = f"\n[bold cyan]description:[/bold cyan]\n\n[cyan]" \
+        desc_string = f"[bold cyan]description:[/bold cyan]\n\n[cyan]" \
                       + "\n".join(["\t" + line for line in desc.splitlines()]) + "[/cyan]"
         s += desc_string
 
@@ -209,4 +215,56 @@ def printStatsTerms(terms: list):
     
     out(table)
 
+# printing diff
+
+def printDiffCreated(diff):
+    created = diff['created']
+    if len(created) > 0:
+        title = "[bold green]Files Created:[/bold green]\n"
+        s = "\n"
+        for path in created:
+            s += "[green]++ " + model.shortenPath(path) + "\n[/green]"
+
+        out(Panel(s, title=title, title_align="left", border_style="green"))
+
+def printDiffDeleted(diff):
+    deleted = diff['deleted']
+    if len(deleted) > 0:
+        title = "[bold red]Files Deleted:[/]\n"
+        s = "\n"
+        for path in deleted:
+            s += "[red]-- " + model.shortenPath(path) + "\n[/red]"    
+        
+        out(Panel(s, title=title, title_align="left", border_style="red"))
+
+def printDiffMoved(diff):
+    moved = diff['moved']
+    if len(moved) > 0:
+        title = "[bold green]Files Moved:[/]\n"
+        s = "\n"
+        for old, new in moved:
+            s += f"[red]-- {model.shortenPath(old)}[/]" + " ---> " + f"[green]++ {model.shortenPath(new)}[/]\n"
+
+        out(Panel(s, title=title, title_align="left", border_style="green"))
+
+def printDiffModified(diff):
+    modified = diff['modified']
+    if len(modified) > 0:
+        title = "[bold cyan]Files Modified:[/]\n"
+        s = "\n"
+        for path in modified:
+            s += f"[cyan]* {model.shortenPath(path)}[/]\n"
+
+        out(Panel(s, title=title, title_align="left", border_style="cyan"))
+
+
+def printDiff(diff):
+    empty = [[],[],[],[]]
+    if len(diff.values()) != empty:
+        printDiffCreated(diff)
+        printDiffDeleted(diff)
+        printDiffMoved(diff)
+        printDiffModified(diff)
+    else:
+        out("No changes were made!")
 
