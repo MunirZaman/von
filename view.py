@@ -157,7 +157,7 @@ def getSearchItem(entry: model.IndexEntry):
     else:
         label_string = f"[bold red]{label}[/]"
 
-    tags_string = f"[yellow]{str(tags)[1:-1]}[/]"
+    tags_string = f"[bold yellow]{str(tags)[1:-1]}[/]"
 
     if rc.TERM_EMOJI:
         diff_string = "⚔"*stats.getLevelFromHardness(diff)
@@ -195,7 +195,7 @@ def printStatsTags(tags: list):
     results = [len(model.runSearch(tags=[tag])) for tag in tags]
 
     table = Table(box=rich.box.ROUNDED)
-    table.add_column("Tags", justify="center")
+    table.add_column("Tags", justify="left")
     table.add_column("Results", justify="center")
 
     for i in range(len(tags)):
@@ -207,7 +207,7 @@ def printStatsTerms(terms: list):
     results = [len(model.runSearch(terms=[term])) for term in terms]
 
     table = Table(box=rich.box.ROUNDED)
-    table.add_column("Terms", justify="center")
+    table.add_column("Terms", justify="left")
     table.add_column("Results", justify="center")
 
     for i in range(len(terms)):
@@ -259,12 +259,13 @@ def printDiffModified(diff):
 
 
 def printDiff(diff):
+    #print(diff.values())
     empty = [[],[],[],[]]
-    if len(diff.values()) != empty:
+    if list(diff.values()) != empty:
         printDiffCreated(diff)
         printDiffDeleted(diff)
         printDiffMoved(diff)
         printDiffModified(diff)
     else:
-        out("No changes were made!")
+        out("[bold green]No changes were made![/]")
 
