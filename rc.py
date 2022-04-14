@@ -3,7 +3,7 @@ import rich.box
 
 SEPERATOR = "\n---\n"
 
-VON_BASE_PATH = "C:\\Users\\Munir\\Documents\\von\\"
+VON_BASE_PATH = os.path.expanduser("~\\Documents\\von\\")
 VON_INDEX_PATH = os.path.join(VON_BASE_PATH, "index")
 VON_SNAPSHOT_PATH = os.path.join(VON_BASE_PATH, "snapshot")
 

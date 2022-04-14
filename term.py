@@ -20,8 +20,8 @@ from .controller import (
     snap
 )
 
-WELCOME_MESSAGE = style("Welcome to VON!\n", fg="red", bold=True, underline=True)
-PROMPT = style("$> ", fg="green", bold=True)
+WELCOME_MESSAGE = style("Welcome to VON!\n", fg=cmd2.Fg.RED, bold=True, underline=True)
+PROMPT = style("$> ", fg=cmd2.Fg.GREEN, bold=True)
 
 def _complete_path(path):
     path = os.path.join(rc.VON_BASE_PATH, path)
