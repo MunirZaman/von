@@ -1,6 +1,5 @@
 import os
 import collections
-from statistics import mode
 import yaml
 import pickle
 from .rc import SEPERATOR, VON_BASE_PATH, VON_INDEX_PATH
@@ -102,16 +101,19 @@ def VonIndex(mode='rb'):
 class Problem:
     def __init__(self, path, **kwargs):
         self.label = None # identifier
-        self.source = None
+        self.source = None # problem source
         self.desc = None # description 
-        self.tags = []
-        self.hardness = -1
-        self.bodies = []
-        self.path = path
+        self.tags = [] # tags
+        self.hardness = -1 # hardness 0 - 20
+        self.bodies = [] 
+        self.path = path 
 
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
+        # if label is not specified then 
+        # set lable = source
+        # if both are unspecified then return error
         if self.label is None:
             if not self.source is None:
                 self.label = self.source
@@ -131,6 +133,7 @@ class Problem:
 
     @property
     def state(self):
+        """ returns the problem statement"""
         return self.bodies[0]
 
     def __repr__(self):
@@ -227,8 +230,10 @@ def rebuildIndex():
     """rebuild index by reading VON_BASE_PATH """
     d = {}
     for p in getAllProblems():
-        if p.source in d:
-            pass # do smth
+        if p.label in d:
+            # if we get multiple problems with the same label
+            # then throw an error
+            raise ValueError(f"Multiple problems with the same label ({p.label}) found")
         d[p.label] = p.entry
     setEntireIndex(d)
 
@@ -241,9 +246,9 @@ def runSearch(
 
     def _matches(entry):
         return (
-            all([entry.hasTag(_) for _ in tags]) and all([entry.hasTerm(_) for _ in terms]) and
-            all([entry.hasSource(_) for _ in sources]) and entry.checkDifficulty(difficulty) and entry.path.startswith(path)
-        )
+            any([entry.hasTag(_) for _ in tags]) and any([entry.hasTerm(_) for _ in terms]) and
+            any([entry.hasSource(_) for _ in sources]) and entry.checkDifficulty(difficulty) and entry.path.startswith(path)
+        ) # should i use all or any?
         
     with VonIndex() as index:
         result = [entry for entry in index.values() if _matches(entry)]

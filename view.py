@@ -41,7 +41,6 @@ def success(msg, *args, **kwargs):
 def link(link, text=None):
     if text is None:
         text = link
-    
     return f"[link={link}]{text}[/link]"
 
 def out(message, *args, **kwargs):
@@ -165,7 +164,6 @@ def getSearchItem(entry: model.IndexEntry):
         diff_string = "X"*stats.getLevelFromHardness(diff)
 
     return [label_string, tags_string, diff_string]
-    
 
 def printSearch(*args, **kwargs):
     table = Table(box=rc.RICH_BOX)
@@ -189,7 +187,7 @@ def printAllEntries():
     for res in results:
         table.add_row(*getSearchItem(res))
 
-    out(table)  
+    out(table)
 
 def printStatsTags(tags: list):
     results = [len(model.runSearch(tags=[tag])) for tag in tags]
@@ -200,7 +198,7 @@ def printStatsTags(tags: list):
 
     for i in range(len(tags)):
         table.add_row(f"[cyan]{tags[i]}[/]", f"[green]{results[i]}[/]")
-    
+
     out(table)
 
 def printStatsTerms(terms: list):
@@ -212,7 +210,7 @@ def printStatsTerms(terms: list):
 
     for i in range(len(terms)):
         table.add_row(f"[cyan]{terms[i]}[/]", f"[green]{results[i]}[/]")
-    
+
     out(table)
 
 # printing diff
@@ -233,8 +231,8 @@ def printDiffDeleted(diff):
         title = "[bold red]Files Deleted:[/]\n"
         s = "\n"
         for path in deleted:
-            s += "[red]-- " + model.shortenPath(path) + "\n[/red]"    
-        
+            s += "[red]-- " + model.shortenPath(path) + "\n[/red]"
+
         out(Panel(s, title=title, title_align="left", border_style="red"))
 
 def printDiffMoved(diff):
