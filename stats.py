@@ -7,7 +7,10 @@ def getLevel():
     """returns the avarage difficulty of problems"""
     diffs = [model.VonIndex()[label].hardness for label in list(model.VonIndex()) if model.VonIndex()[label].hardness > 0]
     
-    avg = int(sum(diffs)/len(diffs))
+    if len(diffs) > 0:
+        avg = int(sum(diffs)/len(diffs))
+    else:
+        avg = 0
     level = getLevelFromHardness(avg)
 
     return level, avg

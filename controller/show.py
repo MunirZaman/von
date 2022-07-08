@@ -1,5 +1,4 @@
 from cmd2 import Cmd2ArgumentParser, with_argparser
-from matplotlib.pyplot import show
 from .. import view, model
 
 show = Cmd2ArgumentParser(prog="show", usage="show an entry from index")

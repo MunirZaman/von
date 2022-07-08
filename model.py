@@ -246,8 +246,8 @@ def runSearch(
 
     def _matches(entry):
         return (
-            any([entry.hasTag(_) for _ in tags]) and any([entry.hasTerm(_) for _ in terms]) and
-            any([entry.hasSource(_) for _ in sources]) and entry.checkDifficulty(difficulty) and entry.path.startswith(path)
+            all([entry.hasTag(_) for _ in tags]) and all([entry.hasTerm(_) for _ in terms]) and
+            all([entry.hasSource(_) for _ in sources]) and entry.checkDifficulty(difficulty) and entry.path.startswith(path)
         ) # should i use all or any?
         
     with VonIndex() as index:
